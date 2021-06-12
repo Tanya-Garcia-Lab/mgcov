@@ -73,7 +73,7 @@ cometAda = function(dat, N=100, mul=2, tol=1e-6){
 
 covchaud <- function(amat, dat, cc = 0, tol=1e-06){
     n = nrow(dat); p = ncol(dat)
-    S = ((n-1)/n)*cov(dat)
+    S = ((n-1)/n)*stats::cov(dat)
     #mat = diag(diag(S))
     #mat = diag(p)
     #mat = S
