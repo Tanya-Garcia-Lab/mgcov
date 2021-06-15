@@ -1,21 +1,23 @@
 #' Estimate the COMET using adaptive thresholding
 #'
 #' @param dat n by p matrix of multivariate data
-#' @param N number of intervals
-#' @param mul maximum level of threshold (times of 1 standard error of each sample covariance)
+#' @param lambda sequence of threshold values for universal thresholding
+#' @param N number of intervals for adaptive thresholding
+#' @param mul maximum level of threshold (times of 1 standard error of each sample covariance) for adaptive thresholding
 #' @param tol tolerance level of errors
 #'
-#' @return cov_list1: list of covariance matrix estimators for all thresholds
-#' @return aic1: sequence of the values of AIC for all thresholds
-#' @return bic1: sequence of the values of BIC for all thresholds
+#' @return cov_list: list of covariance matrix estimators for all thresholds
+#' @return aic: sequence of the values of AIC for all thresholds
+#' @return bic: sequence of the values of BIC for all thresholds
 #' @export
 #'
 #' @examples
 #' x = matrix(rnorm(100*10, 0, 1),100,10)
-COmet = function(dat, N=100, mul=2, tol=1e-6){
+COmet = function(dat, lambda=NULL, N=100, mul=2, tol=1e-6){
     n = dim(dat)[1]; p = dim(dat)[2]
     S = stats::cov(dat)
     Sig.hat=((n-1)/n)*S
+    if (is.null(lambda)){
     if (TRUE){
         one=matrix(1,nrow=n,ncol=n)
         Xbar=one%*%dat/n
@@ -67,7 +69,37 @@ COmet = function(dat, N=100, mul=2, tol=1e-6){
         bicval1[i] = n*(log(det(cov_list1[[i]])) + sum(diag(S%*%solve(cov_list1[[i]])))) + log(n)*k  #sum(cov_list1[[i]]!=0)  # need to minimize
 
     }
-    return(list("cov_list1"=cov_list1, "aic1"=aicval1, "bic1"=bicval1))
+    } else {
+        aictemp_old = 1000000000000; bictemp_old = 1000000000000
+        to=length(lambda)
+        cov_list1 = vector("list",to); aicval1 = numeric(to); bicval1 = numeric(to)
+        amat_old<-(S!=0)*1; diag(amat_old)=0; A_mit=S
+        for (i in 1:to){
+            print(i)
+            Sig.hat.star=matrix(0,nrow=p,ncol=p)
+            Sig.hat.star[which(abs(Sig.hat)>lambda[i])]=Sig.hat[which(abs(Sig.hat)>lambda[i])]
+
+            #print(i)
+            S_ht <- Sig.hat.star #(hard_thresh(R, lambda_seq[i])!=0) * S
+            amat <- S_ht!=0
+            amat <- 1*amat; diag(amat) <- 0
+            colnames(amat) <- 1:p; rownames(amat) <- 1:p
+            if (sum(amat_old)!=sum(amat)){
+                A_mit <- covchaud(amat,dat,tol = tol)$mat #covchaud_icf(amat,dat)$mat
+                amat_old=amat
+            }
+            #A_mit <- covchaud_icf(amat,dat)$mat #fitCovGraph(amat, S + cc*diag(p), n=n)$Shat
+
+            cov_list1[[i]] = A_mit
+
+            k=(p+sum(cov_list1[[i]]!=0))/2
+            aicval1[i] = n*(log(det(cov_list1[[i]])) + sum(diag(S%*%solve(cov_list1[[i]])))) + 2*k   #sum(cov_list1[[i]]!=0)  # 2*(p+sum(cov_list1[[i]]!=0))/2  # need to minimize + df_mle1[i] #
+            bicval1[i] = n*(log(det(cov_list1[[i]])) + sum(diag(S%*%solve(cov_list1[[i]])))) + log(n)*k  #sum(cov_list1[[i]]!=0)  # need to minimize
+
+        }
+    }
+
+    return(list("cov_list"=cov_list1, "aic"=aicval1, "bic"=bicval1))
 }
 
 
