@@ -4,23 +4,25 @@
 \alias{COmet}
 \title{Estimate the COMET using adaptive thresholding}
 \usage{
-COmet(dat, N = 100, mul = 2, tol = 1e-06)
+COmet(dat, lambda = NULL, N = 100, mul = 2, tol = 1e-06)
 }
 \arguments{
 \item{dat}{n by p matrix of multivariate data}
 
-\item{N}{number of intervals}
+\item{lambda}{sequence of threshold values for universal thresholding}
 
-\item{mul}{maximum level of threshold (times of 1 standard error of each sample covariance)}
+\item{N}{number of intervals for adaptive thresholding}
+
+\item{mul}{maximum level of threshold (times of 1 standard error of each sample covariance) for adaptive thresholding}
 
 \item{tol}{tolerance level of errors}
 }
 \value{
-cov_list1: list of covariance matrix estimators for all thresholds
+cov_list: list of covariance matrix estimators for all thresholds
 
-aic1: sequence of the values of AIC for all thresholds
+aic: sequence of the values of AIC for all thresholds
 
-bic1: sequence of the values of BIC for all thresholds
+bic: sequence of the values of BIC for all thresholds
 }
 \description{
 Estimate the COMET using adaptive thresholding
