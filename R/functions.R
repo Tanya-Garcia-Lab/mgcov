@@ -12,7 +12,7 @@
 #'
 #' @examples
 #' x = matrix(rnorm(100*10, 0, 1),100,10)
-cometAda = function(dat, N=100, mul=2, tol=1e-6){
+COmet = function(dat, N=100, mul=2, tol=1e-6){
     n = dim(dat)[1]; p = dim(dat)[2]
     S = stats::cov(dat)
     Sig.hat=((n-1)/n)*S
