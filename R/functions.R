@@ -164,7 +164,7 @@ sigAR = function(p, diag0, rho, hetero=NULL){
         }
     }
     if (!is.null(hetero)){
-        D = runif(p, 0.1, 10)
+        D = mvtnorm::runif(p, 0.1, 10)
         A = diag(D) %*% A %*% diag(D)
     }
     return(A)
@@ -186,7 +186,7 @@ sigBD = function(p, diag0, a, b, k, hetero=NULL){
         }
     }
     if (!is.null(hetero)){
-        D = runif(p, 0.1, 10)
+        D = mvtnorm::runif(p, 0.1, 10)
         #D = runif(p, 2, 5000)
         A = diag(D) %*% A %*% diag(D)
     }
@@ -205,7 +205,7 @@ sigMA = function(p, diag0=1, offdiag, hetero=NULL){
         }
     }
     if (!is.null(hetero)){
-        D = runif(p, 0.1, 10)
+        D = mvtnorm::runif(p, 0.1, 10)
         A = diag(D) %*% A %*% diag(D)
     }
     return(A)
