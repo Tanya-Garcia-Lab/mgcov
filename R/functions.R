@@ -1,4 +1,4 @@
-#' Estimate the COMET using adaptive thresholding
+#' Estimate the COMET estimator using universal or adaptive threshold
 #'
 #' @param dat n by p matrix of multivariate data
 #' @param lambda sequence of threshold values for universal thresholding
