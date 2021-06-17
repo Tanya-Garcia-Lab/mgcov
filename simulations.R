@@ -3,6 +3,7 @@ library(mvtnorm)
 library(mgcov)
 
 ################ Correlation matrix generator ################
+### AR model ###
 sigAR = function(p, rho, hetero=NULL){
     A = diag(rep(1, p))
     for (i in 1 : (p - 1)){
@@ -12,12 +13,12 @@ sigAR = function(p, rho, hetero=NULL){
         }
     }
     if (!is.null(hetero)){
-        D = mvtnorm::runif(p, 0.1, 10)
+        D = runif(p, 0.1, 10)
         A = diag(D) %*% A %*% diag(D)
     }
     return(A)
 }
-
+### Block model ###
 sigBD = function(p, a, b, k, hetero=NULL){
     # a and b are the limits of the uniform distribution and k is the block size
     A = diag(rep(1, p))
@@ -26,7 +27,7 @@ sigBD = function(p, a, b, k, hetero=NULL){
         for (i in ((h - 1) * k + 1) : (h * k)){
             for (j in ((h - 1) * k + 1) : (h * k)){
                 if (i > j){
-                    temp = mvtnorm::runif(1, a, b)
+                    temp = runif(1, a, b)
                     A[i, j] = temp
                     A[j, i] = temp
                 }
@@ -34,13 +35,13 @@ sigBD = function(p, a, b, k, hetero=NULL){
         }
     }
     if (!is.null(hetero)){
-        D = mvtnorm::runif(p, 0.1, 10)
+        D = runif(p, 0.1, 10)
         #D = runif(p, 2, 5000)
         A = diag(D) %*% A %*% diag(D)
     }
     return(A)
 }
-
+### MA model ###
 sigMA = function(p, offdiag, hetero=NULL){
     # a and b are the limits of the uniform distribution and k is the block size
     A = diag(rep(1, p))
@@ -53,7 +54,7 @@ sigMA = function(p, offdiag, hetero=NULL){
         }
     }
     if (!is.null(hetero)){
-        D = mvtnorm::runif(p, 0.1, 10)
+        D = runif(p, 0.1, 10)
         A = diag(D) %*% A %*% diag(D)
     }
     return(A)

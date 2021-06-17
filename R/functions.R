@@ -110,6 +110,23 @@ COmet = function(dat, lambda=NULL, N=100, mul=2, tol=1e-6){
 }
 
 
+#' Perform iterative conditional fitting (ICF) starting from the sample covariance matrix
+#'
+#' @param amat p by p adjacency matrix for indicating the location of non-zero covariances
+#' @param dat n by p matrix of multivariate data
+#' @param cc add diagonal if the sample covariance matrix is not positive-definite
+#' @param tol tolerance level of errors
+#'
+#' @return mat: ICF estimator
+#' @export
+#'
+#' @examples
+#' library(mvtnorm)
+#' p <-10; n<- 100
+#' Sigma = diag(p); diag(Sigma[-p,-1])=0.5; diag(Sigma[-1,-p])=0.5
+#' dat <- rmvnorm(n,mean=rep(0,ncol(Sigma)),sigma=Sigma)
+#' amat = (Sigma!=0)*1
+#' covchaud(amat, dat)
 covchaud <- function(amat, dat, cc = 0, tol=1e-06){
     n = nrow(dat); p = ncol(dat)
     S = ((n-1)/n)*stats::cov(dat)

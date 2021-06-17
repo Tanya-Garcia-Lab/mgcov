@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions.R
 \name{COmet}
 \alias{COmet}
-\title{Estimate the COMET using adaptive thresholding}
+\title{Estimate the COMET estimator using universal or adaptive threshold}
 \usage{
 COmet(dat, lambda = NULL, N = 100, mul = 2, tol = 1e-06)
 }
@@ -25,7 +25,7 @@ aic: sequence of the values of AIC for all thresholds
 bic: sequence of the values of BIC for all thresholds
 }
 \description{
-Estimate the COMET using adaptive thresholding
+Estimate the COMET estimator using universal or adaptive threshold
 }
 \examples{
 library(mvtnorm)
