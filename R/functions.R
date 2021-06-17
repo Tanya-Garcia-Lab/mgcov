@@ -178,7 +178,7 @@ sigBD = function(p, diag0, a, b, k, hetero=NULL){
         for (i in ((h - 1) * k + 1) : (h * k)){
             for (j in ((h - 1) * k + 1) : (h * k)){
                 if (i > j){
-                    temp = runif(1, a, b)
+                    temp = mvtnorm::runif(1, a, b)
                     A[i, j] = temp
                     A[j, i] = temp
                 }
