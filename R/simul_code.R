@@ -2,6 +2,64 @@ rm(list=ls(all=TRUE))
 library(mvtnorm)
 library(mgcov)
 
+################ Correlation matrix generator ################
+sigAR = function(p, rho, hetero=NULL){
+    A = diag(rep(1, p))
+    for (i in 1 : (p - 1)){
+        for (j in (i + 1) : p){
+            A[i, j] = rho^(abs(i - j))
+            A[j, i] = A[i, j]
+        }
+    }
+    if (!is.null(hetero)){
+        D = mvtnorm::runif(p, 0.1, 10)
+        A = diag(D) %*% A %*% diag(D)
+    }
+    return(A)
+}
+
+sigBD = function(p, a, b, k, hetero=NULL){
+    # a and b are the limits of the uniform distribution and k is the block size
+    A = diag(rep(1, p))
+    m = p / k
+    for (h in 1 : m){
+        for (i in ((h - 1) * k + 1) : (h * k)){
+            for (j in ((h - 1) * k + 1) : (h * k)){
+                if (i > j){
+                    temp = mvtnorm::runif(1, a, b)
+                    A[i, j] = temp
+                    A[j, i] = temp
+                }
+            }
+        }
+    }
+    if (!is.null(hetero)){
+        D = mvtnorm::runif(p, 0.1, 10)
+        #D = runif(p, 2, 5000)
+        A = diag(D) %*% A %*% diag(D)
+    }
+    return(A)
+}
+
+sigMA = function(p, offdiag, hetero=NULL){
+    # a and b are the limits of the uniform distribution and k is the block size
+    A = diag(rep(1, p))
+    for (i in 1:p){
+        for (j in 1:p){
+            for (k in 1:length(offdiag)){
+                if (abs(i-j)==k){A[i,j] <- offdiag[k]}
+            }
+            #if (abs(i-j)==1){A[i,j] <- a}
+        }
+    }
+    if (!is.null(hetero)){
+        D = mvtnorm::runif(p, 0.1, 10)
+        A = diag(D) %*% A %*% diag(D)
+    }
+    return(A)
+}
+
+
 #iseed <- iseed
 p <-10; n<- 100
 num_simu = 1
